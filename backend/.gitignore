@@ -1,0 +1,26 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+osrm-data/
+# Python environments and caches
+venv/
+.venv/
+myenv/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Test/build output
+.coverage
+htmlcov/
+build/
+dist/
+
+# Local databases and logs
+*.db
+*.sqlite
+*.sqlite3
+*.log

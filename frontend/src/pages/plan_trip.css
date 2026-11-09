@@ -1,0 +1,59 @@
+.trip-page { min-height: 100vh; padding: 27px clamp(20px, 4vw, 58px) 44px; background: #f5faff; color: #1d2951; }
+.trip-header { max-width: 1440px; margin: 0 auto 25px; display: flex; align-items: center; gap: 18px; }
+.back-button { width: 46px; height: 46px; flex: none; border: 1px solid #cde5f2; border-radius: 14px; background: white; color: #0147ab; font-size: 27px; line-height: 1; }
+.back-button:hover { background: #e0f4ff; }
+.trip-eyebrow, .section-kicker { display: block; margin: 0 0 6px; color: #0d52bd; font-size: 11px; font-weight: 750; letter-spacing: 2px; }
+.trip-header h1 { font-size: clamp(26px, 3vw, 38px); letter-spacing: -1.2px; line-height: 1.1; }
+.trip-location { margin-left: auto; color: #4683b7; font-size: 14px; white-space: nowrap; }
+.trip-layout { max-width: 1440px; margin: auto; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(350px, .85fr); gap: 20px; align-items: start; }
+.map-panel, .itinerary-panel { min-width: 0; border: 1px solid #d6e9f4; border-radius: 22px; background: white; box-shadow: 0 9px 30px #1d29510a; }
+.map-panel { padding: 18px; }
+.map-panel-heading, .itinerary-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.trip-page h2 { margin: 0; font-size: 22px; letter-spacing: -.5px; }
+.preview-badge, .day-count { padding: 7px 11px; border-radius: 999px; background: #e7f6fb; color: #0e4d92; font-size: 12px; white-space: nowrap; }
+.trip-map-wrap { position: relative; height: min(65vh, 680px); min-height: 440px; overflow: hidden; border-radius: 16px; background: #dbeffc; }
+.trip-map { width: 100%; height: 100%; }
+.trip-marker { width: 30px; height: 30px; border: 3px solid white; border-radius: 50%; display: grid; place-items: center; background: #0080ff; box-shadow: 0 2px 9px #00315266; color: white; font-size: 13px; font-weight: 800; }
+.trip-marker.first { width: 37px; height: 37px; background: #008081; }
+.map-legend { position: absolute; bottom: 16px; left: 16px; z-index: 2; display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 10px; background: white; box-shadow: 0 3px 14px #00315230; color: #1d2951; font-size: 12px; }
+.legend-next, .legend-later { width: 18px; border-top: 4px solid #0080ff; }
+.legend-later { border-top: 4px dashed #4683b7; margin-left: 8px; }
+.map-error { position: absolute; top: 16px; left: 16px; right: 65px; z-index: 3; padding: 10px; border-radius: 8px; background: white; color: #1d2951; font-size: 12px; }
+.map-note { margin: 11px 3px 1px; color: #588bae; font-size: 12px; line-height: 1.5; }
+.itinerary-panel { padding: 22px; }
+.day-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+.day-tabs button { padding: 9px 16px; border: 1px solid #bad9ec; border-radius: 11px; background: #f1f9ff; color: #0e4d92; font-weight: 650; }
+.day-tabs button.active { border-color: #0147ab; background: #0147ab; color: white; }
+.trip-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-bottom: 15px; overflow: hidden; border-radius: 13px; background: #daebf5; }
+.trip-stats div { padding: 13px; background: #f1f7fc; }
+.trip-stats small { display: block; color: #588bae; font-size: 11px; }
+.trip-stats strong { display: block; margin-top: 3px; font-size: 19px; }
+.next-leg-card { display: flex; flex-direction: column; gap: 5px; margin-bottom: 22px; padding: 14px 16px; border-left: 4px solid #0080ff; border-radius: 11px; background: #e7f6fb; }
+.next-leg-label { color: #0147ab; font-size: 11px; font-weight: 800; letter-spacing: 1.7px; }
+.next-leg-card strong { font-size: 15px; }
+.next-leg-card small { color: #4683b7; }
+.stops-heading { margin: 0 0 12px; font-size: 15px; }
+.stop-list { margin: 0; padding: 0; list-style: none; }
+.stop-item { position: relative; display: flex; gap: 13px; padding: 0 0 27px; }
+.stop-item:not(:last-child)::before { content: ''; position: absolute; top: 28px; bottom: 0; left: 13px; width: 2px; background: #b9daf1; }
+.stop-number { z-index: 1; width: 29px; height: 29px; flex: none; border: 0; border-radius: 50%; background: #0080ff; color: white; font-size: 12px; font-weight: 750; }
+.stop-item:first-child .stop-number { background: #008081; }
+.stop-details { min-width: 0; flex: 1; }
+.stop-time { display: block; margin-bottom: 3px; color: #6d92ac; font-size: 11px; }
+.stop-name { padding: 0; border: 0; background: transparent; color: #1d2951; font-weight: 750; text-align: left; }
+.stop-name:hover { color: #0147ab; text-decoration: underline; }
+.stop-details p { margin: 3px 0 7px; color: #50728d; font-size: 12px; }
+.stop-details small { color: #4683b7; font-size: 11px; }
+.remove-stop { align-self: start; padding: 5px 8px; border: 1px solid #d8e7f0; border-radius: 8px; background: white; color: #0e4d92; font-size: 11px; }
+.remove-stop:hover { border-color: #0147ab; background: #f1f9ff; }
+.empty-stops { padding: 20px; border-radius: 12px; background: #f1f9ff; color: #4683b7; font-size: 13px; }
+@media (max-width: 950px) { .trip-layout { grid-template-columns: 1fr; } .trip-map-wrap { height: 460px; min-height: 0; } }
+@media (max-width: 560px) { .trip-page { padding: 18px 14px 32px; } .trip-header { flex-wrap: wrap; gap: 10px; } .trip-location { width: 100%; margin-left: 56px; } .map-panel, .itinerary-panel { padding: 14px; } .trip-map-wrap { height: 370px; } .trip-page h2 { font-size: 19px; } }
+
+.integration-form, .integration-notices { margin: 20px clamp(16px, 4vw, 60px); padding: 20px; background: var(--surface, #fff); color: var(--text, #16344c); border-radius: 18px; }
+.integration-form label { display: grid; gap: 8px; margin-bottom: 14px; }
+.integration-form textarea, .integration-form input { font: inherit; color: inherit; background: transparent; border: 1px solid #87a8bc; border-radius: 8px; padding: 10px; }
+.integration-form textarea { min-height: 85px; resize: vertical; }
+.integration-form button:disabled { opacity: .6; cursor: wait; }
+.next-leg-card small, .stop-details small { display: block; margin-top: 6px; }
+[data-theme="dark"] .integration-form, [data-theme="dark"] .integration-notices { background: #142c40; color: #e4f3fc; }
