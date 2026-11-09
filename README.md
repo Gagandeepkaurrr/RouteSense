@@ -30,6 +30,12 @@ npm run dev
 
 Open the URL printed by Vite. The default API base `/backend-api` is proxied to `http://127.0.0.1:8000`. This keeps browser requests and cookies on the frontend host during local development. Optional configuration is in `frontend/.env.example`. For production, provide an equivalent reverse proxy or set `VITE_API_BASE_URL` to the API origin before building and configure backend CORS and cookie settings for that deployment. Vite's development proxy is not part of the production build.
 
+## Vercel frontend deployment
+
+Import the repository with Root Directory set to the repository root (`.`). The root `vercel.json` installs and builds `frontend/`, serves `frontend/dist`, and supports direct navigation to frontend pages.
+
+Set `VITE_API_BASE_URL` in Vercel to your deployed backend's HTTPS origin before building. The local `/backend-api` proxy only works with the Vite development server. Host FastAPI, PostgreSQL and OSRM separately; this configuration deploys only the frontend. Configure backend `CORS_ORIGINS` for the Vercel frontend origin and appropriate HTTPS cookie settings (`COOKIE_SECURE=true`, and `COOKIE_SAMESITE=none` for cross-site deployment). Redeploy after changing Vite environment variables.
+
 ## Features connected
 
 - Signup, login, session restoration and logout use `/api/auth/signup`, `/login`, `/me`, `/logout`.
