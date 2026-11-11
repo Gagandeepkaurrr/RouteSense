@@ -15,10 +15,11 @@ cd C:\Users\sukhm\RouteSense\backend
 docker compose up -d
 # With PostgreSQL running and DATABASE_URL configured:
 .\.venv\Scripts\alembic.exe upgrade head
+.\.venv\Scripts\python.exe seed_pois.py
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-The planner also needs the curated POI records in PostgreSQL. The supplied processed `osrm-data` stays beside `docker-compose.yml`; do not regenerate it.
+The seed command loads the bundled Delhi catalog into PostgreSQL and skips existing places on reruns. The supplied processed `osrm-data` stays beside `docker-compose.yml`; do not regenerate it.
 
 In another terminal:
 
