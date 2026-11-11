@@ -1,0 +1,130 @@
+/* Shared surfaces for the home, account, planner and saved trip screens. */
+#root {
+  --glass-page: #edf4ff;
+  --glass-glow: #b9f1e6;
+  --glass-bloom: #d7ceff;
+  --glass-surface: #f9fcffcc;
+  --glass-edge: #fff;
+  --glass-line: #5675a443;
+  --glass-ink: #15264a;
+  --glass-muted: #405779;
+  --glass-accent: #3345a8;
+  --glass-shadow: 0 16px 44px #243e7820, inset 0 1px 0 #fff;
+}
+
+:root[data-theme='dark'] #root {
+  --glass-page: #0a1229;
+  --glass-glow: #12474e;
+  --glass-bloom: #30265b;
+  --glass-surface: #142340d9;
+  --glass-edge: #9db9f34d;
+  --glass-line: #a5c0fa63;
+  --glass-ink: #edf4ff;
+  --glass-muted: #b4c9e5;
+  --glass-accent: #b9cbff;
+  --glass-shadow: 0 16px 44px #0307156b, inset 0 1px 0 #d8e5ff20;
+}
+
+#root :is(.home-page, .auth-page, .profile-page, .trip-page) {
+  color: var(--glass-ink);
+  background:
+    radial-gradient(ellipse at 86% 10%, var(--glass-glow), transparent 48%),
+    radial-gradient(ellipse at 8% 42%, var(--glass-bloom), transparent 54%),
+    var(--glass-page);
+  padding-bottom: max(76px, env(safe-area-inset-bottom));
+}
+
+#root :is(.search-form, .filter-options, .filter-card, .auth-shell, .profile-stat,
+  .history-card, .history-search, .history-empty, .integration-form, .integration-notices,
+  .map-panel, .itinerary-panel, .map-legend, .map-error, .theme-toggle, .profile-button,
+  .back-button, .profile-back) {
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-shadow);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  #root :is(.search-form, .filter-options, .auth-shell, .integration-form, .integration-notices,
+    .map-panel, .itinerary-panel, .map-legend, .theme-toggle) {
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    backdrop-filter: blur(18px) saturate(1.2);
+  }
+}
+
+#root :is(.plan-button, .auth-submit, .profile-plan-button, .option-button.active, .day-tabs button.active) {
+  background: linear-gradient(135deg, #4544ae, #254eae 65%, #176578);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 7px 18px #263da44d, inset 0 1px 0 #fff5;
+}
+
+#root :is(.plan-button, .auth-submit, .profile-plan-button):hover:not(:disabled) {
+  background: linear-gradient(135deg, #373599, #204195 65%, #125263);
+}
+
+#root :is(.filter-card, .profile-button, .history-card, .plan-button, .auth-submit) {
+  transition: box-shadow .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+#root .filter-card {
+  color: var(--glass-ink);
+  background: linear-gradient(145deg, var(--card-tint, transparent), transparent 75%), var(--glass-surface);
+}
+#root .filter-card.mint { --card-tint: #42c8a94a; }
+#root .filter-card.peach { --card-tint: #eba7684a; }
+#root .filter-card.rose { --card-tint: #d985b94a; }
+#root .filter-card.blue { --card-tint: #678ee34a; }
+#root .filter-card.selected, #root .search-form:focus-within {
+  border-color: var(--glass-accent);
+  box-shadow: 0 0 0 2px var(--glass-line), var(--glass-shadow);
+}
+@media (hover: hover) {
+  #root :is(.filter-card, .history-card, .profile-button):hover { transform: translateY(-3px); }
+}
+
+#root :is(.hero-description, .filter-card small, .auth-form-intro, .auth-switch-copy,
+  .trip-location, .map-note, .stop-time, .trip-stats small, .trip-dates, .trip-destination) {
+  color: var(--glass-muted);
+}
+#root :is(.eyebrow, .home-page h1 span, .trip-eyebrow, .section-kicker,
+  .auth-form-kicker, .profile-eyebrow, .theme-toggle .current) {
+  color: var(--glass-accent);
+}
+
+#root :is(.integration-form, .integration-notices) {
+  max-width: 1440px;
+  margin: 0 auto 20px;
+  padding: clamp(16px, 3vw, 28px);
+  border-radius: 24px;
+  color: var(--glass-ink);
+}
+#root :is(.integration-form, .auth-form) :is(input, textarea) {
+  background: var(--glass-surface);
+  border-color: var(--glass-line);
+  border-radius: 12px;
+  color: var(--glass-ink);
+}
+#root .trip-header .profile-button {
+  width: auto;
+  margin-left: auto;
+  padding: 0 14px;
+  white-space: nowrap;
+}
+#root .day-tabs { flex-wrap: wrap; }
+#root :is(button, input, textarea):focus-visible {
+  outline: 2px solid var(--glass-accent);
+  outline-offset: 3px;
+}
+#root .search-fields input:focus-visible { outline: none; }
+
+@media (max-width: 600px) {
+  #root .auth-page + .theme-toggle { margin-top: -56px; }
+  #root .trip-header { flex-wrap: wrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #root :is(.filter-card, .profile-button, .history-card, .plan-button, .auth-submit, .theme-switch-thumb) {
+    transition: none;
+  }
+  #root :is(.filter-card, .history-card, .profile-button):hover { transform: none; }
+}

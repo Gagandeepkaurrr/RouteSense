@@ -6,6 +6,7 @@ import Auth from './pages/auth.jsx'
 import { api } from './api.js'
 import './styles/App.css'
 import './styles/theme.css'
+import './styles/glass.css'
 
 function ThemeToggle({ theme, onChange }) {
   return (
