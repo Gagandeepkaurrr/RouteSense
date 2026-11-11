@@ -36,7 +36,7 @@
 
 #root :is(.search-form, .filter-options, .filter-card, .auth-shell, .profile-stat,
   .history-card, .history-search, .history-empty, .integration-form, .integration-notices,
-  .map-panel, .itinerary-panel, .map-legend, .map-error, .theme-toggle, .profile-button,
+  .map-panel, .itinerary-panel, .map-error, .theme-toggle, .profile-button,
   .back-button, .profile-back) {
   background: var(--glass-surface);
   border: 1px solid var(--glass-edge);
@@ -45,7 +45,7 @@
 
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
   #root :is(.search-form, .filter-options, .auth-shell, .integration-form, .integration-notices,
-    .map-panel, .itinerary-panel, .map-legend, .theme-toggle) {
+    .map-panel, .itinerary-panel, .theme-toggle) {
     -webkit-backdrop-filter: blur(18px) saturate(1.2);
     backdrop-filter: blur(18px) saturate(1.2);
   }

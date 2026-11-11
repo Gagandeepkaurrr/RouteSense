@@ -70,7 +70,7 @@
 [data-theme='dark'] .trip-location, [data-theme='dark'] .map-note, [data-theme='dark'] .stop-details p, [data-theme='dark'] .stop-details small, [data-theme='dark'] .next-leg-card small { color: #a7c8dc; }
 [data-theme='dark'] .trip-map-wrap { background: #102542; }
 [data-theme='dark'] .trip-map canvas { filter: invert(.87) hue-rotate(180deg) saturate(.75); }
-[data-theme='dark'] .map-legend, [data-theme='dark'] .map-error { background: #0c2146; color: #e9f7ff; box-shadow: 0 4px 16px #0006; }
+[data-theme='dark'] .map-error { background: #0c2146; color: #e9f7ff; box-shadow: 0 4px 16px #0006; }
 [data-theme='dark'] .day-tabs button, [data-theme='dark'] .remove-stop { border-color: #28618f; background: #112d55; color: #bfefff; }
 [data-theme='dark'] .trip-stats { background: #28618f; }
 [data-theme='dark'] .trip-stats div { background: #112d55; }

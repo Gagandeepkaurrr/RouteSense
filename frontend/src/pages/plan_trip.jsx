@@ -7,16 +7,11 @@ import './plan_trip.css'
 
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty'
 maplibregl.setWorkerUrl(workerUrl)
-const EMPTY_ROUTE = { type: 'Feature', geometry: { type: 'LineString', coordinates: [] }, properties: {} }
-
-function routeFeature(geometry) {
-  return { type: 'Feature', geometry, properties: {} }
-}
 const coordinates = (stop) => [stop.coordinates.longitude, stop.coordinates.latitude]
 const time = (value) => new Date(value).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' })
 const money = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`
 
-function TripMap({ stops, legs, selectedLeg, focusedStopId, onSelectStop }) {
+function TripMap({ stops, focusedStopId, onSelectStop }) {
   const containerRef = useRef(null)
   const mapRef = useRef(null)
   const markersRef = useRef([])
@@ -34,12 +29,6 @@ function TripMap({ stops, legs, selectedLeg, focusedStopId, onSelectStop }) {
     map.on('error', (event) => {
       if (event.error) setMapError(true)
     })
-    map.on('load', () => {
-      map.addSource('full-route', { type: 'geojson', data: EMPTY_ROUTE })
-      map.addLayer({ id: 'full-route-line', type: 'line', source: 'full-route', paint: { 'line-color': '#4683b7', 'line-width': 4, 'line-opacity': 0.6, 'line-dasharray': [2, 2] } })
-      map.addSource('next-leg', { type: 'geojson', data: EMPTY_ROUTE })
-      map.addLayer({ id: 'next-leg-line', type: 'line', source: 'next-leg', paint: { 'line-color': '#0080ff', 'line-width': 6, 'line-opacity': 0.95 } })
-    })
     return () => {
       map.remove()
       mapRef.current = null
@@ -51,8 +40,6 @@ function TripMap({ stops, legs, selectedLeg, focusedStopId, onSelectStop }) {
     if (!map) return
 
     function updateMap() {
-      map.getSource('full-route')?.setData({ type: 'FeatureCollection', features: legs.filter(leg => leg.geometry).map(leg => routeFeature(leg.geometry)) })
-      map.getSource('next-leg')?.setData(selectedLeg?.geometry ? routeFeature(selectedLeg.geometry) : EMPTY_ROUTE)
       markersRef.current.forEach((marker) => marker.remove())
       markersRef.current = stops.map((stop, index) => {
         const element = document.createElement('div')
@@ -72,10 +59,8 @@ function TripMap({ stops, legs, selectedLeg, focusedStopId, onSelectStop }) {
       }
     }
 
-    if (map.isStyleLoaded() && map.getSource('full-route')) updateMap()
-    else map.once('load', updateMap)
-    return () => map.off('load', updateMap)
-  }, [stops, legs, selectedLeg, onSelectStop])
+    updateMap()
+  }, [stops, onSelectStop])
 
   useEffect(() => {
     const stop = stops.find((item) => item.stop_id === focusedStopId)
@@ -85,7 +70,6 @@ function TripMap({ stops, legs, selectedLeg, focusedStopId, onSelectStop }) {
   return (
     <div className="trip-map-wrap">
       <div className="trip-map" ref={containerRef} role="region" aria-label="Map of itinerary stops" />
-      <div className="map-legend"><span className="legend-next" /> Selected leg <span className="legend-later" /> Road routes</div>
       {mapError && <div className="map-error">Map tiles could not load. The itinerary remains available on the right.</div>}
     </div>
   )
@@ -158,14 +142,14 @@ function PlanTrip({ onNavigate, itinerary, onGenerated }) {
         <div className="integration-notices">
           <p>{trip.trip.city} · {trip.trip.start_date} · {trip.trip.number_of_travellers} travellers · Total: {trip.summary.total_distance_km} km, {trip.summary.total_travel_minutes} min travel · {money(trip.summary.estimated_cost_per_person_inr)} per person / {money(trip.summary.estimated_cost_group_inr)} group · Budget remaining per person: {money(trip.summary.budget_remaining_per_person_inr)}</p>
           {!trip.summary.within_budget && <p role="alert">This itinerary exceeds your budget.</p>}
-          {trip.warnings.map((warning, index) => <p role="status" key={index}>{warning}</p>)}
+          {trip.warnings.filter(warning => !/\bosrm\b/i.test(warning)).map((warning, index) => <p role="status" key={index}>{warning}</p>)}
           {trip.not_scheduled.length > 0 && <p>Not scheduled: {trip.not_scheduled.join(', ')}</p>}
         </div>
         <div className="trip-layout">
           <section className="map-panel" aria-label="Journey map">
             <div className="map-panel-heading"><div><span className="section-kicker">YOUR ROUTE</span><h2>Explore the journey</h2></div></div>
-            <TripMap stops={day.stops} legs={day.legs} selectedLeg={selectedLeg} focusedStopId={focusedStopId} onSelectStop={setFocusedStopId} />
-            <p className="map-note">Select a stop to see its incoming road leg. {day.legs.some(leg => !leg.geometry) ? 'Road route unavailable for some legs.' : 'Road routes supplied by RouteSense.'}</p>
+            <TripMap stops={day.stops} focusedStopId={focusedStopId} onSelectStop={setFocusedStopId} />
+            <p className="map-note">Select an itinerary stop to locate it on the map.</p>
           </section>
           <section className="itinerary-panel" aria-labelledby="itinerary-title">
             <div className="itinerary-heading"><h2 id="itinerary-title">Detailed itinerary</h2><span className="day-count">{days.length} days</span></div>
@@ -174,9 +158,8 @@ function PlanTrip({ onNavigate, itinerary, onGenerated }) {
             {day.schedule_conflicts > 0 && <p role="status">{day.schedule_conflicts} schedule conflicts.</p>}
             <div className="next-leg-card"><span className="next-leg-label">SELECTED LEG</span>{selectedLeg ? <>
               <strong>{day.stops.find(s => s.stop_id === selectedLeg.from_stop_id)?.name} → {day.stops.find(s => s.stop_id === selectedLeg.to_stop_id)?.name}</strong>
-              <small>{selectedLeg.distance_km} km · {selectedLeg.predicted_duration_minutes} min · {selectedLeg.prediction_source === 'ml' ? 'ML ETA' : `Fallback ETA (${selectedLeg.prediction_source})`}</small>
+              <small>{selectedLeg.distance_km} km · {selectedLeg.predicted_duration_minutes} min estimated travel</small>
               <small>Weather: {selectedLeg.weather.condition_used} · {selectedLeg.weather.fallback_used ? `Estimated / fallback: ${selectedLeg.weather.fallback_reason || selectedLeg.weather.source}` : selectedLeg.weather.forecast_available ? 'Forecast' : 'Estimated'}</small>
-              {!selectedLeg.geometry && <small>Road route unavailable</small>}
             </> : <strong>{focusedStopId ? 'First stop: no incoming travel leg.' : 'No travel legs for this day.'}</strong>}</div>
             <h3 className="stops-heading">Day {day.day_number} · {day.date} · Times in Delhi</h3>
             <ol className="stop-list">{day.stops.map((stop, index) => <li className="stop-item" key={stop.stop_id}>
