@@ -4,12 +4,12 @@ services:
     image: ghcr.io/project-osrm/osrm-backend:latest
     container_name: routesense-osrm
     ports:
-      - "5000:5000"
+      - "5001:5000"
     volumes:
       - ./osrm-data:/data
     command:
       - osrm-routed
       - --algorithm
       - mld
-      - /data/northern-zone-latest.osrm
+      - /data/delhi.osrm
     restart: unless-stopped

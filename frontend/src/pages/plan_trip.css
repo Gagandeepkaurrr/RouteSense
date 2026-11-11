@@ -54,3 +54,6 @@
 .integration-form button:disabled { opacity: .6; cursor: wait; }
 .next-leg-card small, .stop-details small { display: block; margin-top: 6px; }
 [data-theme="dark"] .integration-form, [data-theme="dark"] .integration-notices { background: #142c40; color: #e4f3fc; }
+.map-legend { position: absolute; bottom: 16px; left: 16px; z-index: 2; display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 10px; background: white; box-shadow: 0 3px 14px #00315230; color: #1d2951; font-size: 12px; }
+.legend-next, .legend-later { width: 18px; border-top: 4px solid #0080ff; }
+.legend-later { border-top: 4px dashed #4683b7; margin-left: 8px; }

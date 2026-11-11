@@ -19,7 +19,7 @@ docker compose up -d
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-The seed command loads the bundled Delhi catalog into PostgreSQL and skips existing places on reruns. The supplied processed `osrm-data` stays beside `docker-compose.yml`; do not regenerate it.
+The seed command loads the bundled Delhi catalog into PostgreSQL and skips existing places on reruns. For road lines on the map, follow the [OSRM setup](backend/README.md).
 
 In another terminal:
 

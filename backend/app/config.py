@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
 
     DATABASE_URL: str
-    OSRM_URL: str = "http://localhost:5000"
+    OSRM_URL: str = "http://127.0.0.1:5001"
     GEOAPIFY_API_KEY: str | None = None
     OPEN_METEO_BASE_URL: str = "https://api.open-meteo.com/v1/forecast"
     WEATHER_FORECAST_MAX_DAYS: int = 16

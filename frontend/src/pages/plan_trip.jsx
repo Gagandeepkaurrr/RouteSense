@@ -7,11 +7,16 @@ import './plan_trip.css'
 
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty'
 maplibregl.setWorkerUrl(workerUrl)
+const EMPTY_ROUTE = { type: 'Feature', geometry: { type: 'LineString', coordinates: [] }, properties: {} }
+
+function routeFeature(geometry) {
+  return { type: 'Feature', geometry, properties: {} }
+}
 const coordinates = (stop) => [stop.coordinates.longitude, stop.coordinates.latitude]
 const time = (value) => new Date(value).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' })
 const money = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`
 
-function TripMap({ stops, focusedStopId, onSelectStop }) {
+function TripMap({ stops, legs, selectedLeg, focusedStopId, onSelectStop }) {
   const containerRef = useRef(null)
   const mapRef = useRef(null)
   const markersRef = useRef([])
@@ -29,6 +34,12 @@ function TripMap({ stops, focusedStopId, onSelectStop }) {
     map.on('error', (event) => {
       if (event.error) setMapError(true)
     })
+    map.on('load', () => {
+      map.addSource('full-route', { type: 'geojson', data: EMPTY_ROUTE })
+      map.addLayer({ id: 'full-route-line', type: 'line', source: 'full-route', paint: { 'line-color': '#4683b7', 'line-width': 4, 'line-opacity': 0.6, 'line-dasharray': [2, 2] } })
+      map.addSource('next-leg', { type: 'geojson', data: EMPTY_ROUTE })
+      map.addLayer({ id: 'next-leg-line', type: 'line', source: 'next-leg', paint: { 'line-color': '#0080ff', 'line-width': 6, 'line-opacity': 0.95 } })
+    })
     return () => {
       map.remove()
       mapRef.current = null
@@ -40,7 +51,20 @@ function TripMap({ stops, focusedStopId, onSelectStop }) {
     if (!map) return
 
     function updateMap() {
-      markersRef.current.forEach((marker) => marker.remove())
+      map.getSource('full-route')?.setData({ type: 'FeatureCollection', features: legs.filter(leg => leg.geometry).map(leg => routeFeature(leg.geometry)) })
+      map.getSource('next-leg')?.setData(selectedLeg?.geometry ? routeFeature(selectedLeg.geometry) : EMPTY_ROUTE)
+    }
+
+    if (map.getSource('full-route')) updateMap()
+    else map.once('load', updateMap)
+    return () => map.off('load', updateMap)
+  }, [legs, selectedLeg])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+
+    function updateStops() {
       markersRef.current = stops.map((stop, index) => {
         const element = document.createElement('div')
         element.className = `trip-marker ${index === 0 ? 'first' : ''}`
@@ -59,7 +83,13 @@ function TripMap({ stops, focusedStopId, onSelectStop }) {
       }
     }
 
-    updateMap()
+    if (map.getSource('full-route')) updateStops()
+    else map.once('load', updateStops)
+    return () => {
+      map.off('load', updateStops)
+      markersRef.current.forEach(marker => marker.remove())
+      markersRef.current = []
+    }
   }, [stops, onSelectStop])
 
   useEffect(() => {
@@ -70,6 +100,7 @@ function TripMap({ stops, focusedStopId, onSelectStop }) {
   return (
     <div className="trip-map-wrap">
       <div className="trip-map" ref={containerRef} role="region" aria-label="Map of itinerary stops" />
+      {legs.some(leg => leg.geometry) && <div className="map-legend"><span className="legend-next" /> Selected leg <span className="legend-later" /> Road routes</div>}
       {mapError && <div className="map-error">Map tiles could not load. The itinerary remains available on the right.</div>}
     </div>
   )
@@ -148,8 +179,8 @@ function PlanTrip({ onNavigate, itinerary, onGenerated }) {
         <div className="trip-layout">
           <section className="map-panel" aria-label="Journey map">
             <div className="map-panel-heading"><div><span className="section-kicker">YOUR ROUTE</span><h2>Explore the journey</h2></div></div>
-            <TripMap stops={day.stops} focusedStopId={focusedStopId} onSelectStop={setFocusedStopId} />
-            <p className="map-note">Select an itinerary stop to locate it on the map.</p>
+            <TripMap stops={day.stops} legs={day.legs} selectedLeg={selectedLeg} focusedStopId={focusedStopId} onSelectStop={setFocusedStopId} />
+            <p className="map-note">{day.legs.some(leg => leg.geometry) ? 'Select a stop to highlight its incoming road route.' : 'Road lines are unavailable for this day. The map shows your stops.'}</p>
           </section>
           <section className="itinerary-panel" aria-labelledby="itinerary-title">
             <div className="itinerary-heading"><h2 id="itinerary-title">Detailed itinerary</h2><span className="day-count">{days.length} days</span></div>
